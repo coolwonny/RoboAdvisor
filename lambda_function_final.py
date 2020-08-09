@@ -32,7 +32,7 @@ def validate_data(age, investment_amount, intent_request):
     Validates the data provided by the user.
     """
 
-    # Validate that the user is over 21 years old
+    # Validate that the user is less than 65 years old and preventing negative or zero age
     if age is not None:
         age = parse_int(
             age
