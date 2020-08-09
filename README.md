@@ -2,7 +2,7 @@
 
 In this project, we will create the `RoboAdvisor` bot and add an intent with its corresponding slots. This chatbot project gives us a fundamental knowledge about how a chatbot is created and designed to work through Amazon Web Services(AWS). We are going to use Amazon Lex for creating a simple bot and further tuning it in with a lambda function that allows us to add more ability in validating data provided by the user on the Robo Advisor.
 
-The process can be divided by three parts - Initial bot configuration, building & testing, and enhancing the Robo Advisor with an Amazon lambda function.   
+The process can be divided into three parts - Initial bot configuration, building & testing, and enhancing the Robo Advisor with an Amazon Lambda function.   
 
 
 We start by creating an intent named `RecommendPortfolio` in which we configure some sample utterances as follows:    
@@ -16,9 +16,9 @@ We start by creating an intent named `RecommendPortfolio` in which we configure 
 * I want to invest for my retirement
 * I would like to invest for my retirement   
 
-After that, we define four slots to have the bot ask some questions to users for eliciting responses. Here we define `firstName`, `age`, `investmentAmount` and `riskLevel` for the slots. We can use the built-in types for the first three slots but need to customize the last one having six different categories for risk appetite; None, very low, low, medium, high and very high.
+After that, we define four slots to have the bot ask some questions to users for eliciting responses. Here we define `firstName`, `age`, `investmentAmount` and `riskLevel` for the slots. We can use the built-in types for the first three slots but need to customize the last one having six different categories for risk appetite; None, very low, low, medium, high, and very high.
 
-Building is simply done by clicking the `Build` button in Amazon Lex. The next part is the most challenging in this project. Creating a lambda function from scratch is cumbersome at first sight but the majority of the structure are quite the same as the other one, once we get accustomed to how it works.
+Building a bot is simply done by clicking the `Build` button in Amazon Lex. The next part is the most challenging in this project. Creating a lambda function from scratch is cumbersome at first sight but the majority of the structure is quite the same as the other one, once we get accustomed to how it works.
 
 Simply speaking, a lambda function consists of several functions that can be categorized as helper functions and intents handler ones. When a user inputs responses for questions in slots, it becomes a dialog or `intest_requests` to the lambda function. An example is as follows.   
 
@@ -45,7 +45,7 @@ Simply speaking, a lambda function consists of several functions that can be cat
   }
 }
 ```
-In the example above, we can see the contents in the dictionary of `slots` representing the responses for the four slots we mentioned before. If we look into the [final lambda function](https://github.com/coolwonny/RoboAdvisor/blob/master/lambda_function_final.py), we can see that there is `get_slots` function to fetch all the slots and their values from the current intent. Then, `parse_int` function converts any non-integer value into integer form. Next, `validate_data` function takes arguments like **age** and **investment_amount** to validate whether they meet certain conditions set in the function. Here we set an age validation where we make sure the user is less than 65 years old and also avoid taking negative and zero ages. The same goes on the investment amount where the minimum amount should not be less than U$5000. We imported another function called `build_validation_result` to pass on a Boolean value to see if we can move on to the next slot or stop for the next available input while sending certain messages to users.   
+In the example above, we can see the contents in the dictionary of `slots` representing the responses for the four slots we mentioned before. If we look into the [final lambda function](https://github.com/coolwonny/RoboAdvisor/blob/master/lambda_function_final.py), we can see that there is `get_slots` function to fetch all the slots and their values from the current intent. Then, `parse_int` function converts any non-integer value into integer form. Next, `validate_data` function takes arguments like **age** and **investment_amount** to validate whether they meet certain conditions set in the function. Here we set an age validation where we make sure the user is less than 65 years old and also avoid taking negative and zero ages. The same goes for the investment amount where the minimum amount should not be less than U$5000. We imported another function called `build_validation_result` to pass on a Boolean value to see if we can move on to the next slot or stop for the next available input while sending certain messages to users.   
    
 We now move on to the final slot `riskLevel`. We defined `recommend_portfolio` function that takes in intent_request to see if both of the age and the investment amount are successfully validated by using the `validate_data`function. If it is valid, it enters into a conditional statement by looking at the value of `riskLevel` in the *intent_request*. Based on the value, it will return one of six recommendations to the user.
 
